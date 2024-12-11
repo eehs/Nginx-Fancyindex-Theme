@@ -1,22 +1,20 @@
 # Nginx-Fancyindex-Theme
 
-Theme "design material" for nginx-fancyindex module
+A *Material Design* theme for the nginx-fancyindex module
 
 ![web](images/webview.png "Example of Nginx-Fancyindex-Theme view web")
 
 ![mobile](images/mobileview.png "Example of Nginx-Fancyindex-Theme view web")
 
-use icon from https://feathericons.com/
-
 ## Installation
 
-The fancyindex module can be found [here](https://github.com/aperezdc/ngx-fancyindex) (by @aperezdc).
+The Fancy Index module can be found [here](https://github.com/aperezdc/ngx-fancyindex) (by @aperezdc).
 
-On debian
+On Debian
 
     apt-get install git nginx-extras
 
-sample of configuration of nginx
+Sample NGINX configuration
 
 ```bash
 server {
@@ -27,7 +25,8 @@ server {
         root /<path_nginx_root>;
         fancyindex on;
         fancyindex_localtime on;
-        fancyindex_name_length 255; # Maximum file name length in bytes, change as you like.
+        fancyindex_name_length 255; # Maximum file name length in bytes, change as you see fit.
+
         # theme
         fancyindex_header "/fancyindex/header.html";
         fancyindex_footer "/fancyindex/footer.html";
@@ -40,26 +39,16 @@ server {
 }
 ```
 
-you can clone project an copy file in your root path nginx
+Clone the project and copy its contents to the root directory of NGINX
 
     git clone https://github.com/fraoustin/Nginx-Fancyindex-Theme.git
     mkdir /<path_nginx_root>/fancyindex
     cd Nginx-Fancyindex-Theme
     cp -R * /<path_nginx_root>/fancyindex
 
-you can change color of interface
+You can change the colour of the interface
 
     cd /<path_nginx_root>/fancyindex/mdl
     rm material.min.css 
     cp color/<your-color>.min.css material.min.css
-
-
-## TODO
-
-optimize code
-
-## THANK YOU
-
-- [ViRb3](https://github.com/ViRb3)
-- [amagri](https://github.com/amagri)
 
