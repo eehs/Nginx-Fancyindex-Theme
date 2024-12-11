@@ -112,8 +112,113 @@ function clickGetInfo(id) {
     url = url.substr(0, url.lastIndexOf("/") + 1);
     dialog.setAttribute("url", url + encodeURIComponent(lib));
 
-    //search info and insert into dialog
+    // search info and insert into dialog
     dialog.showModal();
+}
+
+function sortNumbers(a, b) {
+    return a[1] > b[1] ? 1 : b[1] > a[1] ? -1 : 0;
+}
+
+// Re-order directory listing by number in file name (in ascending order)
+function sortDirectoryListingByNumber() {
+    var templateItem = `
+        <li class="mdl-list__item item">
+            <a name="specLib" href="specHref" style="width:99%">
+                <span class="mdl-list__item-primary-content">
+                    <span class="mdl-list__item-avatar specColor"><i class="material-icons">specIcon</i></span>
+                    <span>
+                        specLib
+                        <span class="second_line">specInfo</span>
+                    </span>
+                </span>
+            </a>
+            <span class="mdl-list__item-secondary-content">
+                <a class="mdl-list__item-secondary-action mdl-color-text--accent specViewGetInfo" href="#" onclick="clickGetInfo(specId)">
+                    <i class="material-icons">more_vert</i>
+                </a>
+            </span>
+        </li>
+    `;
+
+    var listOfItems = document
+        .getElementById("list")
+        .getElementsByTagName("tbody")[0]
+        .getElementsByTagName("tr");
+
+    var href = "";
+    var lib = "";
+    var size = "";
+    var dte = "";
+    var icon = ""; // folder_open or insert_drive_file
+    var color = ""; // mdl-color--accent or mdl-color--accent-dark
+    var viewGetInfo = "";
+    var txtInfo = "";
+    var typOfSort = "name";
+
+    let num_map = new Map();
+    for (var i = 0; i < listOfItems.length; i++) {
+        num_map.set(i, Number(listOfItems[i].innerText.match(/\d{1,}/)));
+    }
+
+    let sorted_num_map = Array.from(num_map).sort(sortNumbers);
+
+    var sorted_listOfItems = []
+    for (var i = 0; i < listOfItems.length; i++) {
+        for (var j = 0; j < sorted_num_map.length; j++) {
+	    sorted_listOfItems.push(listOfItems[sorted_num_map[j][0]]);
+	}
+
+        var sorted_item = sorted_listOfItems[i];
+        href = sorted_item.childNodes[0].innerHTML.match(/href=\"(.*?)\"/)[1];
+        lib = (i == 0) ? "Parent directory" : sorted_item.childNodes[0].innerText;
+        size = sorted_item.childNodes[1].textContent;
+        dte = sorted_item.childNodes[2].textContent;
+        viewGetInfo = "";
+        txtInfo = "";
+
+        if (lib.substring(lib.length - 1) == "/") {
+            icon = "folder_open";
+            color = "mdl-color--accent";
+            href += "?NUM";
+            lib = lib.substring(0, lib.length - 1);
+        } else {
+            icon = "insert_drive_file";
+            color = "mdl-color--accent-dark";
+        }
+        if (size == "-") {
+            size = "";
+        }
+        if (dte == "-") {
+            dte = "";
+        }
+        if (size == "" && dte == "" && lib == "Parent directory") {
+            icon = "arrow_back";
+            color = "mdl-color--primary";
+            viewGetInfo = "getinfo-novisible";
+            href += "?NUM";
+        }
+        if (typOfSort == "date") {
+            txtInfo = dte;
+        }
+        if (typOfSort == "size") {
+            txtInfo = size;
+        }
+
+        document.getElementById("listItems").appendChild(
+            htmlToElement(
+                templateItem
+                    .replace("specHref", href)
+                    .replace("specIcon", icon)
+                    .replace("specInfo", txtInfo)
+                    .replace("specColor", color)
+                    .replace("specLib", lib)
+                    .replace("specLib", lib)
+                    .replace("specViewGetInfo", viewGetInfo)
+                    .replace("specId", i)
+            )
+        );
+    }
 }
 
 // GLOBAL
@@ -160,6 +265,9 @@ document.getElementById("homebtn").href = "../".repeat(arrayOfCurrentPath.length
 if (window.location.href.split("?")[1] == "C=M&O=D") {
     document.getElementById("sortByDate").href = "?C=M&O=A";
 }
+if (window.location.href.split("?")[1] == "NUM") {
+    sortDirectoryListingByNumber();
+}
 if (window.location.href.split("?")[1] == "C=N&O=D") {
     document.getElementById("sortByName").href = "?C=N&O=A";
 }
@@ -194,17 +302,15 @@ arrayOfCurrentPath.forEach(function(element) {
 // list table
 var templateItem = `
     <li class="mdl-list__item item">
+	<a name="specLib" href="specHref" style="width:99%">
         <span class="mdl-list__item-primary-content">
             <span class="mdl-list__item-avatar specColor"><i class="material-icons">specIcon</i></span>
-            <a name="specLib" href="specHref">
             <span>
                 specLib
                 <span class="second_line">specInfo</span>
-                <!-- <span class="second_line">specDte</span>
-                <span class="second_line">specSize</span>-->
             </span>
-            </a>
         </span>
+	</a>
         <span class="mdl-list__item-secondary-content">
             <a class="mdl-list__item-secondary-action mdl-color-text--accent specViewGetInfo" href="#" onclick="clickGetInfo(specId)">
                 <i class="material-icons">more_vert</i>
@@ -229,6 +335,9 @@ var typOfSort = "name";
 try {
     if (window.location.href.split("?")[1].split("&")[0] == "C=M") {
         typOfSort = "date";
+    }
+    if (window.location.href.split("?")[1].split("&")[0] == "NUM") {
+	typOfSort = "number";
     }
     if (window.location.href.split("?")[1].split("&")[0] == "C=S") {
         typOfSort = "size";
@@ -268,22 +377,21 @@ for (var i = 0; i < listOfItems.length; ++i) {
         txtInfo = size;
     }
 
-    document.getElementById("listItems").appendChild(
-        htmlToElement(
-            templateItem
-                .replace("specHref", href)
-                .replace("specIcon", icon)
-                //.replace("specSize",size)
-                //.replace("specDte",dte)
-                .replace("specInfo", txtInfo)
-                .replace("specColor", color)
-                .replace("specLib", lib)
-                .replace("specLib", lib)
-                .replace("specViewGetInfo", viewGetInfo)
-                .replace("specId", i)
-        )
-    );
+    // Do not display the default (unsorted) directory listing when sorting by number
+    if (typOfSort != "number") {
+        document.getElementById("listItems").appendChild(
+            htmlToElement(
+                templateItem
+                    .replace("specHref", href)
+                    .replace("specIcon", icon)
+                    .replace("specInfo", txtInfo)
+                    .replace("specColor", color)
+                    .replace("specLib", lib)
+                    .replace("specLib", lib)
+                    .replace("specViewGetInfo", viewGetInfo)
+                    .replace("specId", i)
+            )
+        );
+    }
 }
 
-var out = window.location.href.replace(/:\/\//, "://log:out@");
-document.getElementById("logOut").href = out;

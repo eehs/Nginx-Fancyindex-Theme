@@ -68,6 +68,14 @@
                         </a>
                     </li>
                     <li class="mdl-list__item mdl-menu__item">
+                        <a id="sortByNumber" href="?NUM">
+                            <span class="mdl-list__item-primary-content">
+                                <i class="material-icons mdl-list__item-icon">format_list_numbered</i>
+                                By Number
+                            </span>
+                        </a>
+                    </li>
+                    <li class="mdl-list__item mdl-menu__item">
                         <a id="sortByName" href="?C=N&O=D">
                             <span class="mdl-list__item-primary-content">
                                 <i class="material-icons mdl-list__item-icon">sort_by_alpha</i>
@@ -84,11 +92,6 @@
                         </a>
                     </li>
                 </ul>
-                <a id="logOut" href="">
-                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-                        <i class="material-icons" role="presentation">lock_open</i>
-                    </button>
-                </a>
             </div>
             <div class="mdl-layout__header-row">
                 <div class="no-search mdl-typography--title" id="currentPathTitle">/path/path/path</div>
@@ -97,7 +100,7 @@
                     <i class="material-icons">search</i>
                 </label>
                 <div class="search search-novisible mdl-textfieldno-search fullwidth">
-                    <input class="mdl-textfield__input fullwidth" type="text" id="search-field">
+                    <input class="mdl-textfield__input fullwidth" type="text" style="font-weight: bold; padding-left: 5px" id="search-field">
                 </div>
                 <div class="search search-novisible mdl-layout-spacer"></div>
                 <label class="search search-novisible mdl-button mdl-js-button mdl-button--icon" for="search-field" onclick="clickResetSearch()">
