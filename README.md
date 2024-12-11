@@ -2,13 +2,13 @@
 
 A *Material Design* theme for the nginx-fancyindex module
 
-![web](images/webview.png "Example of Nginx-Fancyindex-Theme view web")
-
-![mobile](images/mobileview.png "Example of Nginx-Fancyindex-Theme view web")
+| Web | Mobile |
+| --- | ------ |
+| ![](images/webview.png) | ![](images/mobileview.png) |
 
 ## Installation
 
-The Fancy Index module can be found [here](https://github.com/aperezdc/ngx-fancyindex) (by @aperezdc).
+This [guide](https://neilmenon.com/blog/install-nginx-fancyindex/) will prove helpful with your installation of NGINX's Fancy Index module.
 
 On Debian
 
@@ -46,7 +46,7 @@ Clone the project and copy its contents to the root directory of NGINX
     cd Nginx-Fancyindex-Theme
     cp -R * /<path_nginx_root>/fancyindex
 
-You can change the colour of the interface
+Change the colour of the interface (optional)
 
     cd /<path_nginx_root>/fancyindex/mdl
     rm material.min.css 
