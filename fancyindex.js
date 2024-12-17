@@ -77,10 +77,16 @@ function clickGetInfo(id) {
         .getElementById("list")
         .getElementsByTagName("tbody")[0]
         .getElementsByTagName("tr");
+
     var item = listOfItems[id];
-    lib = item.childNodes[0].childNodes[0].textContent;
-    size = item.childNodes[1].textContent;
-    dte = item.childNodes[2].textContent;
+    var itemMetadata = [];
+
+    lib = item.children[0].children[0].textContent;
+    size = item.children[1].textContent;
+    dte = item.children[2].textContent;
+
+    itemMetadata.push(lib, size, dte);
+
     if (lib.substring(lib.length - 1) == "/") {
         icon = "folder_open";
         color = "mdl-color--accent";
@@ -108,7 +114,7 @@ function clickGetInfo(id) {
     for (var i = 0; i < listOfItems.length; ++i) {
         var info = document.createElement("div");
         info.innerHTML =
-            listOfItems[i].childNodes[0].textContent + " : " + item.childNodes[i].textContent;
+            listOfItems[i].children[0].textContent + " : " + itemMetadata[i];
         document.getElementById("dialog-content").appendChild(info);
     }
 
@@ -177,17 +183,17 @@ function sortDirectoryListingByNumber() {
     for (var i = 0; i < sortedListOfItems.length; i++) {
 	var sortedItem = sortedListOfItems[i];
 
-	href = sortedItem.childNodes[0].innerHTML.match(/href=\"(.*?)\"/)[1];
-	listOfItems[i].childNodes[0].childNodes[0].href = sortedItem.childNodes[0].childNodes[0].href;
-	listOfItems[i].childNodes[0].childNodes[0].title = sortedItem.childNodes[0].childNodes[0].title;
-	listOfItems[i].childNodes[0].childNodes[0].text = sortedItem.childNodes[0].childNodes[0].text;
+	href = sortedItem.children[0].innerHTML.match(/href=\"(.*?)\"/)[1];
+	listOfItems[i].children[0].children[0].href = sortedItem.children[0].children[0].href;
+	listOfItems[i].children[0].children[0].title = sortedItem.children[0].children[0].title;
+	listOfItems[i].children[0].children[0].text = sortedItem.children[0].children[0].text;
 
-	lib = (i == 0) ? "Parent directory" : sortedItem.childNodes[0].innerText;
-	size = sortedItem.childNodes[1].childNodes[0].textContent;
-	listOfItems[i].childNodes[1].textContent = size;
+	lib = (i == 0) ? "Parent directory" : sortedItem.children[0].innerText;
+	size = sortedItem.children[1].textContent;
+	listOfItems[i].children[1].textContent = size;
 
-	dte = sortedItem.childNodes[2].childNodes[0].textContent;
-	listOfItems[i].childNodes[2].textContent = dte;
+	dte = sortedItem.children[2].textContent;
+	listOfItems[i].children[2].textContent = dte;
 
 	viewGetInfo = "";
 	txtInfo = "";
@@ -361,10 +367,10 @@ try {
 } catch (error) {}
 for (var i = 0; i < listOfItems.length; ++i) {
     var item = listOfItems[i];
-    href = item.childNodes[0].childNodes[0].href;
-    lib = item.childNodes[0].childNodes[0].textContent;
-    size = item.childNodes[1].textContent;
-    dte = item.childNodes[2].textContent;
+    href = item.children[0].children[0].href;
+    lib = item.children[0].children[0].textContent;
+    size = item.children[1].textContent;
+    dte = item.children[2].textContent;
     viewGetInfo = "";
     txtInfo = "";
     if (lib.substring(lib.length - 1) == "/") {
