@@ -124,7 +124,7 @@ function sortNumbers(a, b) {
     return a[1] > b[1] ? 1 : b[1] > a[1] ? -1 : 0;
 }
 
-// Re-order directory listing by number in file name (in ascending order)
+// Re-order directory listing by number in file name in ascending order
 function sortDirectoryListingByNumber() {
     var templateItem = `
         <li class="mdl-list__item item">
@@ -145,11 +145,6 @@ function sortDirectoryListingByNumber() {
         </li>
     `;
 
-    var listOfItems = document
-        .getElementById("list")
-        .getElementsByTagName("tbody")[0]
-        .getElementsByTagName("tr");
-
     var href = "";
     var lib = "";
     var size = "";
@@ -160,68 +155,84 @@ function sortDirectoryListingByNumber() {
     var txtInfo = "";
     var typOfSort = "name";
 
-    let num_map = new Map();
+    var listOfItems = document
+        .getElementById("list")
+        .getElementsByTagName("tbody")[0]
+        .getElementsByTagName("tr");
+
+    var numberMap = new Map();
     for (var i = 0; i < listOfItems.length; i++) {
-        num_map.set(i, Number(listOfItems[i].innerText.match(/\d{1,}/)));
+        numberMap.set(i, Number(listOfItems[i].innerText.match(/\d{1,}/)));
     }
 
-    let sorted_num_map = Array.from(num_map).sort(sortNumbers);
-
-    var sorted_listOfItems = []
+    // Sort numbers in ascending order and make a copy of the sorted list
+    var sortedNumberMap = Array.from(numberMap).sort(sortNumbers);
+    var sortedListOfItems = [];
     for (var i = 0; i < listOfItems.length; i++) {
-        for (var j = 0; j < sorted_num_map.length; j++) {
-	    sorted_listOfItems.push(listOfItems[sorted_num_map[j][0]]);
+	var clonedItem = listOfItems[sortedNumberMap[i][0]].cloneNode(true);
+	sortedListOfItems.push(clonedItem);
+    }
+
+    // Create the sorted elements and append them to parent list
+    for (var i = 0; i < sortedListOfItems.length; i++) {
+	var sortedItem = sortedListOfItems[i];
+
+	href = sortedItem.childNodes[0].innerHTML.match(/href=\"(.*?)\"/)[1];
+	listOfItems[i].childNodes[0].childNodes[0].href = sortedItem.childNodes[0].childNodes[0].href;
+	listOfItems[i].childNodes[0].childNodes[0].title = sortedItem.childNodes[0].childNodes[0].title;
+	listOfItems[i].childNodes[0].childNodes[0].text = sortedItem.childNodes[0].childNodes[0].text;
+
+	lib = (i == 0) ? "Parent directory" : sortedItem.childNodes[0].innerText;
+	size = sortedItem.childNodes[1].childNodes[0].textContent;
+	listOfItems[i].childNodes[1].textContent = size;
+
+	dte = sortedItem.childNodes[2].childNodes[0].textContent;
+	listOfItems[i].childNodes[2].textContent = dte;
+
+	viewGetInfo = "";
+	txtInfo = "";
+
+	if (lib.substring(lib.length - 1) == "/") {
+	    icon = "folder_open";
+	    color = "mdl-color--accent";
+	    href += "?NUM";
+	    lib = lib.substring(0, lib.length - 1);
+	} else {
+	    icon = "insert_drive_file";
+	    color = "mdl-color--accent-dark";
+	}
+	if (size == "-") {
+	    size = "";
+	}
+	if (dte == "-") {
+	    dte = "";
+	}
+	if (size == "" && dte == "" && lib == "Parent directory") {
+	    icon = "arrow_back";
+	    color = "mdl-color--primary";
+	    viewGetInfo = "getinfo-novisible";
+	    href += "?NUM";
+	}
+	if (typOfSort == "date") {
+	    txtInfo = dte;
+	}
+	if (typOfSort == "size") {
+	    txtInfo = size;
 	}
 
-        var sorted_item = sorted_listOfItems[i];
-        href = sorted_item.childNodes[0].innerHTML.match(/href=\"(.*?)\"/)[1];
-        lib = (i == 0) ? "Parent directory" : sorted_item.childNodes[0].innerText;
-        size = sorted_item.childNodes[1].textContent;
-        dte = sorted_item.childNodes[2].textContent;
-        viewGetInfo = "";
-        txtInfo = "";
-
-        if (lib.substring(lib.length - 1) == "/") {
-            icon = "folder_open";
-            color = "mdl-color--accent";
-            href += "?NUM";
-            lib = lib.substring(0, lib.length - 1);
-        } else {
-            icon = "insert_drive_file";
-            color = "mdl-color--accent-dark";
-        }
-        if (size == "-") {
-            size = "";
-        }
-        if (dte == "-") {
-            dte = "";
-        }
-        if (size == "" && dte == "" && lib == "Parent directory") {
-            icon = "arrow_back";
-            color = "mdl-color--primary";
-            viewGetInfo = "getinfo-novisible";
-            href += "?NUM";
-        }
-        if (typOfSort == "date") {
-            txtInfo = dte;
-        }
-        if (typOfSort == "size") {
-            txtInfo = size;
-        }
-
-        document.getElementById("listItems").appendChild(
-            htmlToElement(
-                templateItem
-                    .replace("specHref", href)
-                    .replace("specIcon", icon)
-                    .replace("specInfo", txtInfo)
-                    .replace("specColor", color)
-                    .replace("specLib", lib)
-                    .replace("specLib", lib)
-                    .replace("specViewGetInfo", viewGetInfo)
-                    .replace("specId", i)
-            )
-        );
+	document.getElementById("listItems").appendChild(
+	    htmlToElement(
+	        templateItem
+	            .replace("specHref", href)
+	            .replace("specIcon", icon)
+	            .replace("specInfo", txtInfo)
+	            .replace("specColor", color)
+	            .replace("specLib", lib)
+	            .replace("specLib", lib)
+	            .replace("specViewGetInfo", viewGetInfo)
+	            .replace("specId", i)
+	    )
+	);
     }
 }
 
@@ -303,6 +314,7 @@ arrayOfCurrentPath.forEach(function(element) {
     );
 });
 
+// Increased the clicking surface of items in a directory listing
 // list table
 var templateItem = `
     <li class="mdl-list__item item">
@@ -381,7 +393,7 @@ for (var i = 0; i < listOfItems.length; ++i) {
         txtInfo = size;
     }
 
-    // Do not display the default (unsorted) directory listing when sorting by number
+    // Do not display the default listing (unsorted) when sorting by number
     if (typOfSort != "number") {
         document.getElementById("listItems").appendChild(
             htmlToElement(
