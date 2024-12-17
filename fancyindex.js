@@ -1,8 +1,12 @@
-new ClipboardJS("#btnCopyURL", {
+var copyUrlClipboard = new ClipboardJS("#btnCopyURL", {
     container: document.querySelector("dialog"),
     text: function() {
         return document.querySelector("dialog").getAttribute("url");
     }
+});
+
+copyUrlClipboard.on("success", () => {
+	clickCloseInfo();
 });
 
 function htmlToElement(html) {
