@@ -2,11 +2,16 @@
 
 A *Material Design* theme for the NGINX Fancy Index module.
 
-### Desktop
+## Additional features
+- Sort by *number*
+- Recursive search
+
+## Examples
+#### Desktop
 ![](images/webview.png)
 
-### Mobile
-<img src=images/mobileview.png style="width: 250px"/>
+#### Mobile
+<img src=images/mobileview.png style="width: 17rem"/>
 
 ## Installation
 
@@ -53,5 +58,4 @@ Change the colour of the interface (optional):
     cd /<path_nginx_root>/fancyindex/mdl
     rm material.min.css 
     cp color/<your-color>.min.css material.min.css
-
 
