@@ -11,7 +11,7 @@ A *Material Design* theme for the NGINX Fancy Index module.
 ![](images/webview.png)
 
 #### Mobile
-<img src=images/mobileview.png style="width: 17rem"/>
+<img src=images/mobileview.png style="width: 250px"/>
 
 ## Installation
 
