@@ -373,7 +373,7 @@ async function runSearch(path, recursive=false, nested=false) {
                 var parentDirHref = new URL("../", document.baseURI).href;
 
                 if (recursive == true && itemText[itemText.length - 1] == "/" && itemHref != parentDirHref) {
-                        runSearch(`${itemText}`, true, true);
+                        await runSearch(`${itemText}`, true, true);
                 }
         }
 
@@ -512,6 +512,10 @@ async function runSearch(path, recursive=false, nested=false) {
                                         .replace("specDte", dte)
                                 )
                         );
+
+                        if (i == listOfItems.length - 1) {
+                                document.getElementById("listItems").innerHTML = "";
+                        }
                 } 
         }
 }
@@ -519,32 +523,36 @@ async function runSearch(path, recursive=false, nested=false) {
 // Get enter in the input field search
 var input = document.getElementById("search-field");
 var searchTimer;
-var sortTimer;
 input.addEventListener("input", function(event) {
         clearTimeout(searchTimer);
         clearTimeout(sortTimer);
 
-        searchTimer = setTimeout(() => {
+        searchTimer = setTimeout(async () => {
                 event.preventDefault();
                 document.getElementById("listItems").innerHTML = "";
                 document.getElementById("list").children[1].innerHTML = "";
 
-                runSearch(undefined, true);
-        }, 400);
-
-        sortTimer = setTimeout(() => {
-                event.preventDefault();
+                await runSearch(undefined, true);
+                document.getElementById("listItems").innerHTML = "";
 
                 var sortQuery = window.location.href.split("?")[1].split("&")[0];
                 if (sortQuery == "C=M" || sortQuery == "C=S" || sortQuery == "C=N") {
-                        document.getElementById("listItems").innerHTML = "";
                         sortDirectoryListing();
                 }
                 if (sortQuery == "C=NUM") {
-                        document.getElementById("listItems").innerHTML = "";
                         sortDirectoryListing(true);
                 }
-        }, 450);
+
+                var listOfItems = document
+                        .getElementById("list")
+                        .getElementsByTagName("tbody")[0]
+                        .getElementsByTagName("tr");
+
+                if (listOfItems.length == 0) {
+                        document.getElementById("listItems").innerHTML = "<h5 style='text-align: center'>No results found for your search.</h5>";
+                }
+
+        }, 400);
 });
 
 // Clear search query if user clicked an item from the directory listing
