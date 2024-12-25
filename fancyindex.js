@@ -214,7 +214,11 @@ function sortDirectoryListing(calledFromSearch=false) {
                         }
                 } catch (error) {}
 
-                preSortedMap.set(i, (i > 0 && item == 0) ? listOfItems.length : item);
+                preSortedMap.set(i,
+                (i > 0 && order == "O=D" && item == 0) ? listOfItems.length :
+                    (i > 0 && order == "O=D" && item == "-") ? 1000000000000 : // petabyte * 1000 = exabyte
+                        (i > 0 && itemText[itemText.length - 1] == "/" && order == "O=A" && item == 0) ? listOfItems.length : // for correct ordering of directories by their numbers in ascending order
+                            (i > 0 && order == "O=A" && (item == 0 || item == "-")) ? 0 : item);
         }
 
         var sortedMap = [];
