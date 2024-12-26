@@ -173,9 +173,13 @@ function sortDirectoryListing(calledFromSearch=false) {
                 .getElementsByTagName("tbody")[0]
                 .getElementsByTagName("tr");
 
+        var preSortedDirectoryMap = new Map();
         var preSortedMap = new Map();
+        var order = window.location.href.split("?")[1].split("&")[1];
+
         for (var i = 0; i < listOfItems.length; i++) {
                 var itemTextArr = listOfItems[i].children[0].children[0].text.split("/");
+                var itemText = (calledFromSearch) ? itemTextArr[itemTextArr.length - 1] : listOfItems[i].children[0].children[0].text;
                 var item;
 
                 try {
@@ -183,7 +187,6 @@ function sortDirectoryListing(calledFromSearch=false) {
                                 item = listOfItems[i].children[2].innerText.match(/\d{4}-\d{2}-\d{2}, \d{2}:\d{2}/)
                         }
                         if (typOfSort == "number") {
-                                var itemText = (calledFromSearch) ? itemTextArr[itemTextArr.length - 1] : listOfItems[i].children[0].children[0].text;
                                 item = Number(itemText.match(/\d{1,}/))
                         }
                         if (typOfSort == "name") {
@@ -211,25 +214,35 @@ function sortDirectoryListing(calledFromSearch=false) {
                         }
                 } catch (error) {}
 
-                preSortedMap.set(i,
-                (i > 0 && order == "O=D" && item == 0) ? listOfItems.length :
-                    (i > 0 && order == "O=D" && item == "-") ? 1000000000000 : // petabyte * 1000 = exabyte
-                        (i > 0 && itemText[itemText.length - 1] == "/" && order == "O=A" && item == 0) ? listOfItems.length : // for correct ordering of directories by their numbers in ascending order
-                            (i > 0 && order == "O=A" && (item == 0 || item == "-")) ? 0 : item);
+
+                // Sort directories by date separately since they appear first on the displayed directory listing
+                if (typOfSort == "date" && itemText[itemText.length - 1] == "/") {
+                        preSortedDirectoryMap.set(i, item);
+                } else {
+                        preSortedMap.set(i,
+                                (i > 0 && typOfSort == "number" && order == "O=D" && item == 0) ? listOfItems.length :
+                                (i > 0 && typOfSort == "size" && order == "O=D" && item == "-") ? 1000000000000 : // petabyte * 1000 = 1 exabyte
+                                (i > 0 && typOfSort == "number" && order == "O=A" && itemText[itemText.length - 1] == "/" && item == 0) ? listOfItems.length : // for listing directories first when sorting by number in ascending order
+                                (i > 0 && (typOfSort == "number" || typOfSort == "size") && order == "O=A" && (item == 0 || item == "-")) ? 0 : item);
+                }
         }
 
-        var sortedMap = [];
-        try {
-                var order = window.location.href.split("?")[1].split("&")[1];
+        var sortedDirectoryMap = new Map();
+        var sortedMap = new Map();
 
+        try {
                 // Date
                 if (typOfSort == "date") {
                         if (order == "O=A") {
+                                sortedDirectoryMap = Array.from(preSortedDirectoryMap).sort((a, b) => new Date(a[1]) - new Date(b[1]));
                                 sortedMap = Array.from(preSortedMap).sort((a, b) => new Date(a[1]) - new Date(b[1]));
                         }
                         if (order == "O=D") {
+                                sortedDirectoryMap = Array.from(preSortedDirectoryMap).sort((a, b) => new Date(b[1]) - new Date(a[1]));
                                 sortedMap = Array.from(preSortedMap).sort((a, b) => new Date(b[1]) - new Date(a[1]));
                         }
+
+                        sortedMap = [].concat(sortedDirectoryMap, sortedMap);
                 }
 
                 // Number
