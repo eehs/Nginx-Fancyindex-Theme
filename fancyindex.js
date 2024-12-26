@@ -385,7 +385,7 @@ async function runSearch(path, recursive=false, nested=false) {
                 var item = listOfItems[i];
                 var itemText = listOfItems[i].children[0].children[0].text;
 
-                if (itemText.includes("/Parent directory/")) {
+                if (itemText.includes("Parent directory/")) {
                         continue;
                 }
 
