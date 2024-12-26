@@ -48,14 +48,11 @@ function clickResetSearch() {
                 item.classList.add("search-novisible");
         }
 
-        if (sessionStorage["search_query"] != "") {
-                document.getElementById("search-field").value = "";
-                document.getElementById("listItems").innerHTML = "";
-                runSearch(undefined, false);
+        document.getElementById("search-field").value = "";
+        document.getElementById("listItems").innerHTML = "";
 
-                sessionStorage["search_query"] = "";
-                window.location.reload();
-        }
+        sessionStorage["search_query"] = "";
+        window.location.reload();
 }
 
 var templateDialog = `    
