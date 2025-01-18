@@ -218,7 +218,7 @@ function sortDirectoryListing(calledFromSearch=false) {
 
 
                 // Sort directories by date separately since they appear first on the displayed directory listing
-                if (typOfSort == "date" && itemText[itemText.length - 1] == "/") {
+                if (typOfSort == "date" && itemText[itemText.length - 1] == "/" || typOfSort == "name" && order == "O=D" && itemText[itemText.length - 1] == "/") {
                         preSortedDirectoryMap.set(i, item);
                 } else {
                         preSortedMap.set(i,
@@ -263,7 +263,10 @@ function sortDirectoryListing(calledFromSearch=false) {
                                 sortedMap = Array.from(preSortedMap).sort((a, b) => a[1] > b[1] ? 1 : b[1] > a[1] ? -1 : 0);
                         }
                         if (order == "O=D") {
+                                sortedDirectoryMap = Array.from(preSortedDirectoryMap).sort((a, b) => a[1] != "" && a[1] < b[1] ? 1 : b[1] != "" && b[1] < a[1] ? -1 : 0);
                                 sortedMap = Array.from(preSortedMap).sort((a, b) => a[1] != "" && a[1] < b[1] ? 1 : b[1] != "" && b[1] < a[1] ? -1 : 0);
+
+                                sortedMap = [].concat(sortedDirectoryMap, sortedMap);
                         }
                 }
 
