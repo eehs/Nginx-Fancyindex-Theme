@@ -175,7 +175,9 @@ function sortDirectoryListing(calledFromSearch=false) {
 
         var preSortedDirectoryMap = new Map();
         var preSortedMap = new Map();
-        var order = window.location.href.split("?")[1].split("&")[1];
+
+        var href = window.location.href;
+        var order = (href[href.length - 1] == "/") ? "O=A" : href.split("?")[1].split("&")[1];
 
         for (var i = 0; i < listOfItems.length; i++) {
                 var itemTextArr = listOfItems[i].children[0].children[0].text.split("/");
@@ -549,11 +551,11 @@ input.addEventListener("input", function(event) {
                 await runSearch(undefined, true);
                 document.getElementById("listItems").innerHTML = "";
 
-                var sortQuery = window.location.href.split("?")[1].split("&")[0];
+                var href = window.location.href;
+                var sortQuery = (href[href.length - 1] == "/") ? "C=N" : href.split("?")[1].split("&")[0];
                 if (sortQuery == "C=M" || sortQuery == "C=S" || sortQuery == "C=N") {
                         sortDirectoryListing();
-                }
-                if (sortQuery == "C=NUM") {
+                } else if (sortQuery == "C=NUM") {
                         sortDirectoryListing(true);
                 }
 
@@ -566,7 +568,7 @@ input.addEventListener("input", function(event) {
                         document.getElementById("listItems").innerHTML = "<h5 style='text-align: center'>No results found for your search.</h5>";
                 }
 
-        }, 400);
+        }, 400); // We wait this long before running the search query, adjust as you see fit
 });
 
 // Clear search query if user clicked an item from the directory listing
