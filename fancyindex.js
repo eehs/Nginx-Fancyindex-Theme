@@ -576,6 +576,12 @@ input.addEventListener("input", function(event) {
         }, 400); // We wait this long before running the search query, adjust as you see fit
 });
 
+// Close search bar if user clicks away from it
+document.getElementById("search-field").addEventListener("focusout", function(event) {
+        if (document.getElementById("search-field").value.length < 1)
+                clickResetSearch();
+});
+
 // Manage title, bar, ...
 var currentPath = document.getElementById("original_fancyindex").childNodes[0].textContent.trim();
 document.getElementById("currentPathTitle").innerHTML = currentPath;
