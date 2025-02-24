@@ -49,12 +49,12 @@ function clickResetSearch(reloadPage=true) {
         }
 
         document.getElementById("search-field").value = "";
-        document.getElementById("listItems").innerHTML = "";
-
         sessionStorage["search_query"] = "";
 
-        if (reloadPage)
+        if (reloadPage) {
+                document.getElementById("listItems").innerHTML = "";
                 window.location.reload();
+        }
 }
 
 var templateDialog = `    
