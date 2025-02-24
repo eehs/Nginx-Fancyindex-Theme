@@ -36,7 +36,7 @@ function clickSearch() {
         document.getElementById("search-field").select();
 }
 
-function clickResetSearch() {
+function clickResetSearch(reloadPage=true) {
         var listOfItems = document.getElementsByClassName("no-search");
         for (var i = 0; i < listOfItems.length; ++i) {
                 var item = listOfItems[i];
@@ -52,7 +52,9 @@ function clickResetSearch() {
         document.getElementById("listItems").innerHTML = "";
 
         sessionStorage["search_query"] = "";
-        window.location.reload();
+
+        if (reloadPage)
+                window.location.reload();
 }
 
 var templateDialog = `    
@@ -130,7 +132,7 @@ function clickGetInfo(id) {
 function sortDirectoryListing(calledFromSearch=false) {
         var templateItem = `
                 <li class="mdl-list__item item">
-                        <a name="specLib" href="specHref" style="width:99%">
+                        <a name="specLib" href="specHref" onclick="clickResetSearch(false)" style="width:99%">
                                 <span class="mdl-list__item-primary-content">
                                         <span class="mdl-list__item-avatar specColor"><i class="material-icons">specIcon</i></span>
                                         <span>
@@ -410,7 +412,7 @@ async function runSearch(path, recursive=false, nested=false) {
                 if (itemText.match(new RegExp(searchRegex, "i"))) {
                         var templateItem = `
                                 <li class="mdl-list__item item">
-                                        <a name="specLib" href="specHref" style="width:99%">
+                                        <a name="specLib" href="specHref" onclick="clickResetSearch(false)" style="width:99%">
                                                 <span class="mdl-list__item-primary-content">
                                                         <span class="mdl-list__item-avatar specColor"><i class="material-icons">specIcon</i></span>
                                                         <span>
@@ -572,13 +574,6 @@ input.addEventListener("input", function(event) {
                 }
 
         }, 400); // We wait this long before running the search query, adjust as you see fit
-});
-
-// Clear search query if user clicked an item from the directory listing
-document.getElementById("listItems").addEventListener("click", function(event) {
-        if (event.target.tagName == "SPAN") {
-                sessionStorage["search_query"] = "";
-        }
 });
 
 // Manage title, bar, ...
