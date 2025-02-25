@@ -93,14 +93,14 @@
                     </li>
                 </ul>
             </div>
-            <div class="mdl-layout__header-row">
+            <div class="mdl-layout__header-row" onclick="clickSearch()">
                 <div class="no-search mdl-typography--title" id="currentPathTitle">/path/path/path</div>
                 <div class="no-search mdl-layout-spacer"></div>
                 <label class="no-search mdl-button mdl-js-button mdl-button--icon" onclick="clickSearch()">
                     <i class="material-icons">search</i>
                 </label>
                 <div class="search search-novisible mdl-textfieldno-search fullwidth">
-                    <input class="mdl-textfield__input fullwidth" type="text" style="font-weight: bold; padding-left: 5px" id="search-field">
+                    <input class="mdl-textfield__input fullwidth" type="text" style="font-weight: bold; padding-left: 5px; outline: none; border: 1.5px solid white; border-radius: 5px" id="search-field">
                 </div>
                 <div class="search search-novisible mdl-layout-spacer"></div>
                 <label class="search search-novisible mdl-button mdl-js-button mdl-button--icon" for="search-field" onclick="clickResetSearch(false)">

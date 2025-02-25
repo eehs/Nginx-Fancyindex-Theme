@@ -573,7 +573,7 @@ input.addEventListener("input", function(event) {
 
                 if (listOfItems.length >= 1) {
                         if (sessionStorage["search_query"].length >= 1) {
-                                document.getElementById("listItems").prepend(htmlToElement(`<li class="mdl-list__item item"><span>Results for '${sessionStorage['search_query']}'</span></li>`));
+                                document.getElementById("listItems").prepend(htmlToElement(`<li class="mdl-list__item item"><span>Results for '${sessionStorage['search_query']}' (<b>${listOfItems.length}</b> matches)</span></li>`));
                         }
                 } else {
                         document.getElementById("listItems").innerHTML = "<h5 style='text-align: center'>No results found for your search.</h5>";
